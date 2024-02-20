@@ -1894,6 +1894,10 @@ html:has(.drawer-toggle:checked) {
   margin-right: auto;
 }
 
+.mb-10 {
+  margin-bottom: 2.5rem;
+}
+
 .mb-6 {
   margin-bottom: 1.5rem;
 }
@@ -1904,6 +1908,14 @@ html:has(.drawer-toggle:checked) {
 
 .ml-auto {
   margin-left: auto;
+}
+
+.mr-0 {
+  margin-right: 0px;
+}
+
+.mr-0\.5 {
+  margin-right: 0.125rem;
 }
 
 .mr-2 {
@@ -1930,6 +1942,10 @@ html:has(.drawer-toggle:checked) {
   margin-top: 5rem;
 }
 
+.mt-28 {
+  margin-top: 7rem;
+}
+
 .mt-3 {
   margin-top: 0.75rem;
 }
@@ -1940,6 +1956,14 @@ html:has(.drawer-toggle:checked) {
 
 .mt-40 {
   margin-top: 10rem;
+}
+
+.mt-6 {
+  margin-top: 1.5rem;
+}
+
+.mt-8 {
+  margin-top: 2rem;
 }
 
 .flex {
@@ -2010,6 +2034,18 @@ html:has(.drawer-toggle:checked) {
   width: auto;
 }
 
+.w-full {
+  width: 100%;
+}
+
+.min-w-44 {
+  min-width: 11rem;
+}
+
+.min-w-45 {
+  min-width: 11.25rem;
+}
+
 .max-w-md {
   max-width: 28rem;
 }
@@ -2030,6 +2066,10 @@ html:has(.drawer-toggle:checked) {
   grid-template-columns: repeat(1, minmax(0, 1fr));
 }
 
+.flex-col {
+  flex-direction: column;
+}
+
 .items-center {
   align-items: center;
 }
@@ -2044,6 +2084,10 @@ html:has(.drawer-toggle:checked) {
 
 .justify-center {
   justify-content: center;
+}
+
+.justify-around {
+  justify-content: space-around;
 }
 
 .gap-4 {
@@ -2072,10 +2116,6 @@ html:has(.drawer-toggle:checked) {
 
 .border-r-0 {
   border-right-width: 0px;
-}
-
-.border-t {
-  border-top-width: 1px;
 }
 
 .border-base-300 {
@@ -2110,6 +2150,11 @@ html:has(.drawer-toggle:checked) {
 .bg-cyan-700 {
   --tw-bg-opacity: 1;
   background-color: rgb(14 116 144 / var(--tw-bg-opacity));
+}
+
+.bg-stone-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(245 245 244 / var(--tw-bg-opacity));
 }
 
 .bg-\[url\(\/images\/hero-3\.svg\)\] {
@@ -2155,6 +2200,14 @@ html:has(.drawer-toggle:checked) {
   padding-bottom: 1.5rem;
 }
 
+.pb-5 {
+  padding-bottom: 1.25rem;
+}
+
+.pt-5 {
+  padding-top: 1.25rem;
+}
+
 .text-center {
   text-align: center;
 }
@@ -2177,6 +2230,11 @@ html:has(.drawer-toggle:checked) {
 .text-lg {
   font-size: 1.125rem;
   line-height: 1.75rem;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 }
 
 .text-xl {
@@ -2246,6 +2304,11 @@ html:has(.drawer-toggle:checked) {
   color: rgb(22 78 99 / var(--tw-text-opacity));
 }
 
+.hover\:text-gray-500:hover {
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity));
+}
+
 @media (min-width: 640px) {
   .sm\:ml-6 {
     margin-left: 1.5rem;
@@ -2269,12 +2332,24 @@ html:has(.drawer-toggle:checked) {
     margin-right: 1.5rem;
   }
 
+  .md\:flex {
+    display: flex;
+  }
+
   .md\:max-w-md {
     max-width: 28rem;
   }
 
   .md\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .md\:items-start {
+    align-items: flex-start;
+  }
+
+  .md\:justify-center {
+    justify-content: center;
   }
 
   .md\:place-self-center {
@@ -2287,6 +2362,23 @@ html:has(.drawer-toggle:checked) {
 
   .md\:p-0 {
     padding: 0px;
+  }
+
+  .md\:p-20 {
+    padding: 5rem;
+  }
+
+  .md\:pb-5 {
+    padding-bottom: 1.25rem;
+  }
+
+  .md\:pt-5 {
+    padding-top: 1.25rem;
+  }
+
+  .md\:text-4xl {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
   }
 
   .md\:text-lg {
@@ -2310,6 +2402,10 @@ html:has(.drawer-toggle:checked) {
 
   .lg\:grid-cols-4 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .lg\:pl-20 {
+    padding-left: 5rem;
   }
 
   .lg\:text-5xl {

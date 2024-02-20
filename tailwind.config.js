@@ -4,7 +4,11 @@ module.exports = {
     "./views/**/*.ejs"
   ],
   theme: {
-    extend: {},
+    extend: {
+      minWidth: {
+        '45': '11.25rem',
+      },
+    },
   },
   daisyui: {
     themes: ['cupcake'],

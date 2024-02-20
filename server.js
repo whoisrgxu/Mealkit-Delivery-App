@@ -4,9 +4,9 @@
 * Policy. No part of this assignment has been copied manually or electronically from
 * any other source (including web sites) or distributed to other students.
 *
-* Student Name  : Rong Gang Xu
-* Student ID    : rgxu
-* Course/Section: WEB322/NEE
+* Student Name  : 
+* Student ID    : 
+* Course/Section: 
 *
 **************************************************************************************/
 
@@ -23,7 +23,7 @@ app.use(expressLayouts);
 const allMealkits = mealkits.getAllMealKits();
 const featured = mealkits.getFeaturedMealKits(allMealkits);
 const mealkitsByCategory = mealkits.getMealKitsByCategory(allMealkits);
-console.log(mealkitsByCategory);
+
 // Add your routes here
 // e.g. app.get() { ... }
 app.get('/', (req, res) => {
@@ -80,7 +80,6 @@ const HTTP_PORT = process.env.PORT || 8080;
 function onHttpStart() {
     console.log("Express http server listening on: " + HTTP_PORT);
 }
-const HOST = '192.168.0.181';  
 // Listen on port 8080. The default port for http is 80, https is 443. We use 8080 here
 // because sometimes port 80 is in use by other applications on the machine
-app.listen(HTTP_PORT, HOST, onHttpStart);
+app.listen(HTTP_PORT, onHttpStart);
