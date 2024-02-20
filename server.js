@@ -4,9 +4,9 @@
 * Policy. No part of this assignment has been copied manually or electronically from
 * any other source (including web sites) or distributed to other students.
 *
-* Student Name  : 
-* Student ID    : 
-* Course/Section: 
+* Student Name  : Rong Gang Xu
+* Student ID    : rgxu
+* Course/Section: WEB322/NEE
 *
 **************************************************************************************/
 
