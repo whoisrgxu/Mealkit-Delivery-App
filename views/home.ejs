@@ -1,0 +1,102 @@
+<div>
+    <div class="hero xl:min-h-screen bg-base-200 xl:bg-[url(/images/Header-background.png)] bg-[url(/images/hero-3.svg)]">
+        <div class="hero-content text-center">
+            <div class="max-w-md">
+            <h1 class="text-3xl lg:text-5xl font-bold mt-4 xl:mt-0">Canada's Top Meal <br>Kit Experience!</h1>
+            <p class="py-6">Harvest the best – fast and FREE delivery <br>of nature's Finest to Your Kitchen!</p>
+            <button class="btn mb-6 xl:mb-0 bg-cyan-700 border-transparent text-white w-48 min-h-9 h-9 text-lg hover:bg-cyan-900 hover:border-transparent"><a href="/">Get Started</a></button>
+            </div>
+        </div>
+    </div>
+    <div class="p-6">
+        <h1 class="text-center text-xl text-cyan-700 font-bold m-6">How It Works</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="card glass rounded-none">
+                <figure><img src="/images/intro-4.jpg" alt="This is an image showing delicious food."/></figure>
+                <div class="card-body rounded-none">
+                    <h2 class="card-title">We Create Original Recipe</h2>
+                    <p>Our head chef, Robert Bush, and his kitchen crew create over 50 delicious and nutritious recipes every week.</p>
+                </div>
+            </div>
+            <div class="card glass rounded-none">
+                <figure><img src="/images/intro-1.jpg" alt="This is an image showing delicious food."/></figure>
+                <div class="card-body">
+                    <h2 class="card-title">You Choose Your Preferences</h2>
+                    <p>Choose from a wide range of healthy options, including low-carb, vegan, and gluten-free meals, tailored for your dietary preferences.</p>
+                </div>
+            </div> 
+            <div class="card glass rounded-none">
+                <figure><img src="/images/intro-3.jpg" alt="This is an image showing delicious food."/></figure>
+                <div class="card-body">
+                    <h2 class="card-title">We Deliver for Free</h2>
+                    <p>Experience the freshest ingredients sourced locally, delivered right to your doorstep for every recipe.</p>
+                </div>
+            </div>
+            <div class="card glass rounded-none">
+                <figure><img src="/images/intro-2.jpg" alt="This is an image showing delicious food."/></figure>
+                <div class="card-body">
+                    <h2 class="card-title">You Cook with Ease</h2>
+                    <p>We provide pre-measured ingredients and easy-to-follow instructions, making cooking a breeze, even for beginners.</p>
+                </div>
+            </div>                                                                 
+        </div>
+        <div class="flex justify-center mt-6 md:mt-12">
+            <a href="/" class="text-cyan-700 font-bold text-lg"><i class="fa-regular fa-circle-play"></i><span>WATCH THE VIDEO</span></a>
+        </div>        
+    </div>
+
+    <!--This is why choosing us section-->
+    <div class="p-6">
+        <h1 class="text-center text-xl text-cyan-700 font-bold m-6">Why KitchHavst is the best mealkit in Canada</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="card glass rounded-none">
+                <figure><img src="/images/intro-5.png" alt="This is an image showing delicious food."/></figure>
+                <div class="card-body">
+                    <h2 class="card-title">It's time to BE GOOD-ER</h2>
+                    <p>It's time to be BETTER than good with our food, in our operations, for our customers and for our community.</p>
+                    <div class="card-actions justify-start">
+                    <a class="underline text-cyan-700" href="/">Read more</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card glass rounded-none">
+                <figure><img src="/images/intro-6.jpg" alt="This is an image showing delicious food."/></figure>
+                <div class="card-body">
+                    <h2 class="card-title">NEW weekly air fryer recipes</h2>
+                    <p>Satisfy your crispy cravings with less oil, fat & calories than traditional frying.</p>
+                    <div class="card-actions justify-start">
+                    <a class="underline text-cyan-700" href="/">Read more</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card glass rounded-none">
+                <figure><img src="/images/intro-7.jpg" alt="This is an image showing delicious food."/></figure>
+                <div class="card-body">
+                    <h2 class="card-title">Locally sourced ingredients</h2>
+                    <p>We source our ingredients from farms across Canada to maximize flavour, freshness and nutrition.</p>
+                    <div class="card-actions justify-start">
+                    <a class="underline text-cyan-700" href="/">Read more</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card glass rounded-none">
+                <figure><img src="/images/intro-8.jpg" alt="This is an image showing delicious food."/></figure>
+                <div class="card-body">
+                    <h2 class="card-title">Healthier New Year</h2>
+                    <p>Reach your health goals in 2024 with KITCHAVST and pro hockey player Sarah Nurse!</p>
+                    <div class="card-actions justify-start">
+                    <a class="underline text-cyan-700" href="/">Read more</a>
+                    </div>
+                </div>
+            </div>          
+        </div>    
+    </div>
+    <div class="p-6">
+        <h1 class="text-center text-xl text-cyan-700 font-bold m-6">Featured Meal Kit</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" >
+            <% featured.forEach((item) => { %>
+                <%- include('partials/mealkit', {item}) %>
+            <% }) %>
+        </div>  
+    </div>
+</div>

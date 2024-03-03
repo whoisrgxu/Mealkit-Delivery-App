@@ -1,0 +1,10 @@
+<div class="card bg-base-100 shadow-xl rounded-none">
+  <figure><img src="<%= item.imageUrl%>" alt="mealkit"/></figure>
+  <div class="card-body">
+    <h2 class="card-title"><%= item.title %></h2>
+    <p>with <%= item.includes %></p>
+    <div class="card-actions justify-end mt-2">
+      <a class="btn btn-primary w-32 min-h-8 h-8" href="/">$<%= item.price %></a>
+    </div>
+  </div>
+</div> 

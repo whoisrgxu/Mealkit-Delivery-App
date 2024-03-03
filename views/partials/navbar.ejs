@@ -1,0 +1,41 @@
+<div class="navbar bg-base-100 border-2 border-l-0 border-r-0 border-primary">
+    <a href="/" class="btn btn-ghost text-xl hover:bg-transparent"><img class="h-12 w-auto" src="/images/logo.png" alt="This is the website logo."></a>
+    <div class="hidden lg:flex">
+    <a href="/on-the-menu" class="btn btn-ghost hover:bg-transparent hover:text-gray-500 text-lg">On the menu</a>
+    <a href="/pricing" class="btn hover:bg-transparent hover:text-gray-500 btn-ghost text-lg">Pricing</a>
+    <a href="/faq" class="btn hover:bg-transparent hover:text-gray-500 btn-ghost text-lg">Faq</a>
+    <a href="/gift-cards" class="btn btn-ghost hover:bg-transparent hover:text-gray-500 text-lg">Gift Cards</a>
+    <a href="/sustainability" class="btn btn-ghost hover:bg-transparent hover:text-gray-500 text-lg">Sustainability</a>
+    </div>
+  <div class="ml-auto hidden lg:flex">
+    <a href="/log-in" class="btn btn-ghost text-base md:text-lg border border-cyan-700 text-cyan-700 bg-base-100 hover:text-cyan-900 hover:border-cyan-900 hover:bg-base-100 mr-6">Log in</a>
+    <a href="/sign-up" class="btn btn-ghost text-base md:text-lg text-white bg-cyan-700 hover:bg-cyan-900 mr-3 md:mr-6" >Sign up</a>
+  </div>
+  <div class="drawer drawer-end lg:hidden">
+  <input id="my-drawer-4" type="checkbox" class="drawer-toggle" />
+  <div class="drawer-content z-10 flex justify-end">
+    <!-- Page content here -->
+    <label for="my-drawer-4" class="m-2 cursor-pointer text-cyan-700"><i class="fa-solid fa-bars"></i></label>
+  </div> 
+  <div class="drawer-side z-20">
+    <label for="my-drawer-4" aria-label="close sidebar" class="drawer-overlay"></label>
+    <ul class="menu p-4 w-80 min-h-full bg-base-100 text-base-content">
+      <!-- Sidebar content here -->
+      <li class="mt-12"><a href="/on-the-menu">On the menu</a></li>
+      <li><a href="/pricing">Pricing</a></li>
+      <li><a href="/faq">Faq</a></li>
+      <li><a href="/gift-cards">Gift Cards</a></li>
+      <li><a href="/Sustainability">Sustainability</a></li>
+      <div class="mt-3">
+      <button class="btn w-24 min-h-8 h-10 border-cyan-700 text-cyan-700 bg-base-100 mr-2 hover:text-cyan-900 hover:bg-white hover:border-cyan-900"><a href="/log-in">Login</a></button>
+      <button class="btn w-24 min-h-8 h-10 bg-cyan-700 text-white hover:bg-cyan-900"><a href="/sign-up">Sign Up</a></button>
+      </div>
+    </ul>
+    <label for="my-drawer-4" class="absolute top-0 right-0 p-4 cursor-pointer">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </label>    
+  </div>
+</div>
+</div>
