@@ -9,23 +9,32 @@
 * Course/Section: WEB322/NEE
 *
 **************************************************************************************/
-
+const mealkits = require("./modules/mealkit-util");
 const path = require("path");
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
-let mealkits = require("./modules/mealkit-util");
+
+// Set up dotenv
+const dotenv = require("dotenv");
+dotenv.config({path: "./config/keys.env"});
+
+// Set up express
 const app = express();
 
+// Set up EJS
 app.set("view engine", "ejs");
 app.set("layout", "layouts/main");
 app.use(expressLayouts);
+
+// Set up body-parser
+app.use(express.urlencoded({extended: false}));
+
+app.use(express.static(path.join(__dirname, "/assets")));
 
 const allMealkits = mealkits.getAllMealKits();
 const featured = mealkits.getFeaturedMealKits(allMealkits);
 const mealkitsByCategory = mealkits.getMealKitsByCategory(allMealkits);
 
-// Add your routes here
-// e.g. app.get() { ... }
 app.get('/', (req, res) => {
     res.render("home", {featured, title: "home"});
 })
@@ -50,9 +59,120 @@ app.get('/log-in', (req, res) => {
     res.render("log-in", {title: "Log-in"});
 })
 app.get('/sign-up', (req, res) => {
-    res.render("sign-up", {title: "Sign-up"});
+    res.render("sign-up", {
+        title: "Sign-up",
+        validationMessages: {},
+        values: {
+            firstname: "",
+            lastname: "",
+            email: "",
+            password: ""
+        }    
+    });
 })
-app.use(express.static(path.join(__dirname, "/assets")));
+
+app.post("/sign-up", (req, res) => {
+
+    console.log(req.body);
+
+    const {firstname, lastname, email, password} = req.body;
+
+    let passedValidation = true;
+    let validationMessages = {};
+
+    // First name validation
+    if (typeof firstname !== "string") {
+        passedValidation = false;
+        validationMessages.firstname = "You must specify a first name.";
+    }
+    else if (firstname.trim().length === 0){
+        passedValidation = false;
+        validationMessages.firstname = "The first name is required";
+    } 
+
+    // Last name validation
+    if (typeof lastname !== "string") {
+        passedValidation = false;
+        validationMessages.lastname = "You must specify a last name.";
+    }
+    else if (lastname.trim().length === 0){
+        passedValidation = false;
+        validationMessages.lastname = "The last name is required";
+    } 
+    // Email validation
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (typeof email !== "string") {
+        passedValidation = false;
+        validationMessages.email = "You must specify an email.";
+    }
+    else if (email.trim().length === 0){
+        passedValidation = false;
+        validationMessages.email = "The email is required";
+    } 
+    else if (emailRegex.test(email) === false) {
+        passedValidation = false;
+        validationMessages.email = "Incorrect email format";
+    } 
+
+    // Password validation
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}:"<>?])[A-Za-z\d!@#$%^&*()_+{}:"<>?]{8,12}$/;
+    if (typeof password !== "string") {
+        passedValidation = false;
+        validationMessages.password = "You must specify a password.";
+    }
+    else if (password.trim().length === 0){
+        passedValidation = false;
+        validationMessages.password = "The password is required";
+    } 
+    else if (passwordRegex.test(password) === false) {
+        passedValidation = false;
+        validationMessages.password = "Your password should be between 8 to 12 characters and contains at least one lowercase letter, uppercase letter, number and a symbol";
+    }
+
+    if (passedValidation) {
+        const sgMail = require("@sendgrid/mail");
+        sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
+        
+        const msg = {
+            to: email,
+            from: "appledef@gmail.com",
+            subject: "Welcome to KITCHAVST",
+            html: 
+                `Hi ${firstname} ${lastname},<br><br>
+                 Congratulations and welcome to KITCHAVST!<br><br>
+                 Your account has been successfully created. Here are your account details:<br><br>
+                 User firstname: ${firstname}<br>
+                 User lastname: ${lastname}<br>
+                 Email: ${email}<br><br>
+                 To get started, please visit our website at https://smoggy-red-blazer.cyclic.app and 
+                 log in with your credentials.<br><br>
+                 Than your for choosing KITCHAVST. We look forward to providing you with an exceptional 
+                 experience.<br><br>
+                 Best regards,<br><br>
+                 Rong Gang Xu<br>`
+        }
+        sgMail.send(msg)
+            .then(() => {
+                res.send("Success, validation passed!"); // might need to replace with a welcome page?
+            })
+            .catch(err => {
+                console.log(err);
+
+                res.render("sign-up", {
+                    title: "Sign-up",
+                    validationMessages,
+                    values: req.body    
+                });
+            })
+    }
+    else {
+        res.render("sign-up", {
+            title: "Sign-up",
+            validationMessages,
+            values: req.body    
+        });
+    }
+})
 
 // This use() will not allow requests to go beyond it
 // so we place it at the end of the file, after the other routes.
