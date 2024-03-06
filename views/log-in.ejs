@@ -1,10 +1,16 @@
-<form class="p-8 pt-5 pb-5 md:p-20 md:pt-5 md:pb-5 md:max-w-md max-w-xs mx-auto bg-stone-100 mt-28 form-border border border-cyan-700">
+<form method="post" action="/log-in" class="p-8 pt-5 pb-5 md:p-20 md:pt-5 md:pb-5 md:max-w-md max-w-xs mx-auto bg-stone-100 mt-28 form-border border border-cyan-700">
   <div class="text-center text-cyan-700 font-bold text-3xl md:text-4xl mb-10" >Welcome back</div>
   <div class="form-control">
-    <input type="text" id="email" class="input input-bordered border-cyan-700 border rounded-none mt-3" placeholder="Email address">
+    <input type="text" id="email" name="email" value="<%= values.email %>" class="input input-bordered border-cyan-700 border rounded-none mt-3" placeholder="Email address">
+    <% if (validationMessages.email) { %>
+          <span style="color: red"><%= validationMessages.email %></span> 
+    <% } %>
   </div>
   <div class="form-control">
-    <input type="text" id="password" class="input input-bordered border-cyan-700 border rounded-none mt-6" placeholder="Password">
+    <input type="password" id="password" name="password" value="<%= values.password %>" class="input input-bordered border-cyan-700 border rounded-none mt-6" placeholder="Password">
+    <% if (validationMessages.password) { %>
+          <span style="color: red"><%= validationMessages.password %></span> 
+    <% } %>    
   </div>
   <div class="form-control mt-8">
     <button type="submit" class="btn btn-base-200 bg-cyan-700 text-white text-xl font-bold hover:bg-cyan-900">Log in</button>

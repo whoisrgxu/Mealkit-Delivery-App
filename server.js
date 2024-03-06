@@ -56,8 +56,58 @@ app.get('/Sustainability', (req, res) => {
     res.send("This page demonstrates how we achieve long-term sustainability.");
 })
 app.get('/log-in', (req, res) => {
-    res.render("log-in", {title: "Log-in"});
+    res.render("log-in", {
+        title: "Log-in",
+        validationMessages: {},
+        values: {
+            email: "",
+            password: ""
+        }
+    });
 })
+// Submit log-in form
+app.post("/log-in", (req, res) => {
+
+    let passedValidation = true;
+
+    console.log(req.body);
+
+    const {email, password} = req.body;
+
+    let validationMessages = {};
+
+    // Email validation
+    if (typeof email !== "string") {
+        passedValidation = false;
+        validationMessages.email = "The email is required";
+    }
+    else if (email.trim().length === 0){
+        passedValidation = false;
+        validationMessages.email = "Please enter a valid email address";
+    } 
+
+    // Password validation
+    if (typeof password !== "string") {
+        passedValidation = false;
+        validationMessages.password = "You must specify a password.";
+    }
+    else if (password.trim().length === 0){
+        passedValidation = false;
+        validationMessages.password = "Please enter your password";
+    } 
+    if (passedValidation === false) {
+        res.render("log-in", {
+            title: "Log-in",
+            validationMessages,
+            values: req.body    
+        });
+    }
+    else {
+        res.redirect('/');
+    }
+
+})
+
 app.get('/sign-up', (req, res) => {
     res.render("sign-up", {
         title: "Sign-up",
