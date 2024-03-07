@@ -2026,6 +2026,10 @@ html:has(.drawer-toggle:checked) {
   width: 1.5rem;
 }
 
+.w-72 {
+  width: 18rem;
+}
+
 .w-80 {
   width: 20rem;
 }
@@ -2222,6 +2226,11 @@ html:has(.drawer-toggle:checked) {
   line-height: 2.25rem;
 }
 
+.text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
+
 .text-base {
   font-size: 1rem;
   line-height: 1.5rem;
@@ -2410,6 +2419,11 @@ html:has(.drawer-toggle:checked) {
 
   .lg\:pl-20 {
     padding-left: 5rem;
+  }
+
+  .lg\:text-4xl {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
   }
 
   .lg\:text-5xl {

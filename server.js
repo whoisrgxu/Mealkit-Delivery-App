@@ -65,6 +65,12 @@ app.get('/log-in', (req, res) => {
         }
     });
 })
+
+app.get("/welcome", (req, res) => {
+    res.render("welcome", {
+        title: "Welcome",       
+    });
+})
 // Submit log-in form
 app.post("/log-in", (req, res) => {
 
@@ -165,7 +171,7 @@ app.post("/sign-up", (req, res) => {
     } 
 
     // Password validation
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}:"<>?])[A-Za-z\d!@#$%^&*()_+{}:"<>?]{8,12}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W)[A-Za-z\d\W]{8,12}$/;
     if (typeof password !== "string") {
         passedValidation = false;
         validationMessages.password = "You must specify a password.";
@@ -203,7 +209,7 @@ app.post("/sign-up", (req, res) => {
         }
         sgMail.send(msg)
             .then(() => {
-                res.send("Success, validation passed!"); // might need to replace with a welcome page?
+                res.redirect("/welcome"); 
             })
             .catch(err => {
                 console.log(err);
