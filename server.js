@@ -9,10 +9,11 @@
 * Course/Section: WEB322/NEE
 *
 **************************************************************************************/
-const mealkits = require("./modules/mealkit-util");
 const path = require("path");
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
+const mongoose = require("mongoose");
+const session = require("express-session");
 
 // Set up dotenv
 const dotenv = require("dotenv");
@@ -26,209 +27,29 @@ app.set("view engine", "ejs");
 app.set("layout", "layouts/main");
 app.use(expressLayouts);
 
+// Set up Express session
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true
+}));
+
+app.use((req, res, next) => {
+    // Save the user to the global variable "locals".
+    res.locals.user = req.session.user;
+    res.locals.userType = req.session.userType;
+    next();
+})
 // Set up body-parser
 app.use(express.urlencoded({extended: false}));
+// Load controllers into express
+const generalController = require("./controllers/generalController");
+const mealkitsController = require("./controllers/mealkitsController")
+
+app.use("/", generalController);
+app.use("/mealkits", mealkitsController);
 
 app.use(express.static(path.join(__dirname, "/assets")));
-
-const allMealkits = mealkits.getAllMealKits();
-const featured = mealkits.getFeaturedMealKits(allMealkits);
-const mealkitsByCategory = mealkits.getMealKitsByCategory(allMealkits);
-
-app.get('/', (req, res) => {
-    res.render("home", {featured, title: "home"});
-})
-
-app.get('/on-the-menu', (req, res) => {
-    res.render("on-the-menu", {mealkitsByCategory, title: "on-the-menu"});
-})
-
-app.get('/pricing', (req, res) => {
-    res.send("This is a page about pricing.");
-})
-app.get('/faq', (req, res) => {
-    res.send("This page includes frequent asked questions.");
-})
-app.get('/gift-cards', (req, res) => {
-    res.send("This page includes gift cards information.");
-})
-app.get('/Sustainability', (req, res) => {
-    res.send("This page demonstrates how we achieve long-term sustainability.");
-})
-app.get('/log-in', (req, res) => {
-    res.render("log-in", {
-        title: "Log-in",
-        validationMessages: {},
-        values: {
-            email: "",
-            password: ""
-        }
-    });
-})
-
-app.get("/welcome", (req, res) => {
-    res.render("welcome", {
-        title: "Welcome",       
-    });
-})
-// Submit log-in form
-app.post("/log-in", (req, res) => {
-
-    let passedValidation = true;
-
-    console.log(req.body);
-
-    const {email, password} = req.body;
-
-    let validationMessages = {};
-
-    // Email validation
-    if (typeof email !== "string") {
-        passedValidation = false;
-        validationMessages.email = "The email is required";
-    }
-    else if (email.trim().length === 0){
-        passedValidation = false;
-        validationMessages.email = "Please enter a valid email address";
-    } 
-
-    // Password validation
-    if (typeof password !== "string") {
-        passedValidation = false;
-        validationMessages.password = "You must specify a password.";
-    }
-    else if (password.trim().length === 0){
-        passedValidation = false;
-        validationMessages.password = "Please enter your password";
-    } 
-    if (passedValidation === false) {
-        res.render("log-in", {
-            title: "Log-in",
-            validationMessages,
-            values: req.body    
-        });
-    }
-    else {
-        res.redirect('/');
-    }
-
-})
-
-app.get('/sign-up', (req, res) => {
-    res.render("sign-up", {
-        title: "Sign-up",
-        validationMessages: {},
-        values: {
-            firstname: "",
-            lastname: "",
-            email: "",
-            password: ""
-        }    
-    });
-})
-
-app.post("/sign-up", (req, res) => {
-
-    console.log(req.body);
-
-    const {firstname, lastname, email, password} = req.body;
-
-    let passedValidation = true;
-    let validationMessages = {};
-
-    // First name validation
-    if (typeof firstname !== "string") {
-        passedValidation = false;
-        validationMessages.firstname = "You must specify a first name.";
-    }
-    else if (firstname.trim().length === 0){
-        passedValidation = false;
-        validationMessages.firstname = "The first name is required";
-    } 
-
-    // Last name validation
-    if (typeof lastname !== "string") {
-        passedValidation = false;
-        validationMessages.lastname = "You must specify a last name.";
-    }
-    else if (lastname.trim().length === 0){
-        passedValidation = false;
-        validationMessages.lastname = "The last name is required";
-    } 
-    // Email validation
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (typeof email !== "string") {
-        passedValidation = false;
-        validationMessages.email = "You must specify an email.";
-    }
-    else if (email.trim().length === 0){
-        passedValidation = false;
-        validationMessages.email = "The email is required";
-    } 
-    else if (emailRegex.test(email) === false) {
-        passedValidation = false;
-        validationMessages.email = "Incorrect email format";
-    } 
-
-    // Password validation
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W)[A-Za-z\d\W]{8,12}$/;
-    if (typeof password !== "string") {
-        passedValidation = false;
-        validationMessages.password = "You must specify a password.";
-    }
-    else if (password.trim().length === 0){
-        passedValidation = false;
-        validationMessages.password = "The password is required";
-    } 
-    else if (passwordRegex.test(password) === false) {
-        passedValidation = false;
-        validationMessages.password = "Your password should be between 8 to 12 characters and contains at least one lowercase letter, uppercase letter, number and a symbol";
-    }
-
-    if (passedValidation) {
-        const sgMail = require("@sendgrid/mail");
-        sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
-        
-        const msg = {
-            to: email,
-            from: "appledef@gmail.com",
-            subject: "Welcome to KITCHAVST",
-            html: 
-                `Hi ${firstname} ${lastname},<br><br>
-                 Congratulations and welcome to KITCHAVST!<br><br>
-                 Your account has been successfully created. Here are your account details:<br><br>
-                 User firstname: ${firstname}<br>
-                 User lastname: ${lastname}<br>
-                 Email: ${email}<br><br>
-                 To get started, please visit our website at https://smoggy-red-blazer.cyclic.app and 
-                 log in with your credentials.<br><br>
-                 Than your for choosing KITCHAVST. We look forward to providing you with an exceptional 
-                 experience.<br><br>
-                 Best regards,<br><br>
-                 Rong Gang Xu<br>`
-        }
-        sgMail.send(msg)
-            .then(() => {
-                res.redirect("/welcome"); 
-            })
-            .catch(err => {
-                console.log(err);
-
-                res.render("sign-up", {
-                    title: "Sign-up",
-                    validationMessages,
-                    values: req.body    
-                });
-            })
-    }
-    else {
-        res.render("sign-up", {
-            title: "Sign-up",
-            validationMessages,
-            values: req.body    
-        });
-    }
-})
 
 // This use() will not allow requests to go beyond it
 // so we place it at the end of the file, after the other routes.
@@ -256,6 +77,12 @@ const HTTP_PORT = process.env.PORT || 8080;
 function onHttpStart() {
     console.log("Express http server listening on: " + HTTP_PORT);
 }
-// Listen on port 8080. The default port for http is 80, https is 443. We use 8080 here
-// because sometimes port 80 is in use by other applications on the machine
-app.listen(HTTP_PORT, onHttpStart);
+
+mongoose.connect(process.env.MONGODB_CONNECTION_STRING)
+.then(() => {
+    console.log("Connected to the MongoDB database.");
+    app.listen(HTTP_PORT, onHttpStart);
+})
+.catch(err => {
+    console.log(`Can't connect to the MongoDB database: ${err}`);
+})

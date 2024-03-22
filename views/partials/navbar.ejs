@@ -1,15 +1,25 @@
+
 <div class="navbar bg-base-100 border-2 border-l-0 border-r-0 border-primary">
     <a href="/" class="btn btn-ghost text-xl hover:bg-transparent"><img class="h-12 w-auto" src="/images/logo.png" alt="This is the website logo."></a>
     <div class="hidden lg:flex">
-    <a href="/on-the-menu" class="btn btn-ghost hover:bg-transparent hover:text-gray-500 text-lg">On the menu</a>
+    <a href="/mealkits/on-the-menu" class="btn btn-ghost hover:bg-transparent hover:text-gray-500 text-lg">On the menu</a>
     <a href="/pricing" class="btn hover:bg-transparent hover:text-gray-500 btn-ghost text-lg">Pricing</a>
     <a href="/faq" class="btn hover:bg-transparent hover:text-gray-500 btn-ghost text-lg">Faq</a>
     <a href="/gift-cards" class="btn btn-ghost hover:bg-transparent hover:text-gray-500 text-lg">Gift Cards</a>
     <a href="/sustainability" class="btn btn-ghost hover:bg-transparent hover:text-gray-500 text-lg">Sustainability</a>
     </div>
   <div class="ml-auto hidden lg:flex">
-    <a href="/log-in" class="btn btn-ghost text-base md:text-lg border border-cyan-700 text-cyan-700 bg-base-100 hover:text-cyan-900 hover:border-cyan-900 hover:bg-base-100 mr-6">Log in</a>
-    <a href="/sign-up" class="btn btn-ghost text-base md:text-lg text-white bg-cyan-700 hover:bg-cyan-900 mr-3 md:mr-6" >Sign up</a>
+      <% if(typeof user !== "undefined") { %>
+        <% if(userType === "customer") { %>
+        <span class="text-base md:text-lg bg-base-100"><em>Hello</em> <a href="/cart" class="text-cyan-700 md:text-lg font-bold bg-base-100 hover:text-cyan-900 underline hover:border-cyan-900 hover:bg-base-100 mr-6"><%= user.firstname %></a></span>          
+        <% } else { %>
+        <span class="text-base md:text-lg bg-base-100"><em>Hello</em> <a href="/mealkits/list" class="text-cyan-700 md:text-lg font-bold bg-base-100 hover:text-cyan-900 underline hover:border-cyan-900 hover:bg-base-100 mr-6"><%= user.firstname %></a></span>
+        <% } %>
+        <a href="/log-out" class="btn btn-ghost text-base md:text-lg text-white bg-cyan-700 hover:bg-cyan-900 mr-3 md:mr-6" >Log out</a>
+      <% } else { %>
+        <a href="/log-in" class="btn btn-ghost text-base md:text-lg border border-cyan-700 text-cyan-700 bg-base-100 hover:text-cyan-900 hover:border-cyan-900 hover:bg-base-100 mr-6">Log in</a>
+        <a href="/sign-up" class="btn btn-ghost text-base md:text-lg text-white bg-cyan-700 hover:bg-cyan-900 mr-3 md:mr-6" >Sign up</a>
+      <% } %> 
   </div>
   <div class="drawer drawer-end lg:hidden">
   <input id="my-drawer-4" type="checkbox" class="drawer-toggle" />
@@ -21,14 +31,24 @@
     <label for="my-drawer-4" aria-label="close sidebar" class="drawer-overlay"></label>
     <ul class="menu p-4 w-80 min-h-full bg-base-100 text-base-content">
       <!-- Sidebar content here -->
-      <li class="mt-12"><a href="/on-the-menu">On the menu</a></li>
+      <li class="mt-12"><a href="/mealkits/on-the-menu">On the menu</a></li>
       <li><a href="/pricing">Pricing</a></li>
       <li><a href="/faq">Faq</a></li>
       <li><a href="/gift-cards">Gift Cards</a></li>
       <li><a href="/Sustainability">Sustainability</a></li>
       <div class="mt-3">
-      <button class="btn w-24 min-h-8 h-10 border-cyan-700 text-cyan-700 bg-base-100 mr-2 hover:text-cyan-900 hover:bg-white hover:border-cyan-900"><a href="/log-in">Login</a></button>
-      <button class="btn w-24 min-h-8 h-10 bg-cyan-700 text-white hover:bg-cyan-900"><a href="/sign-up">Sign Up</a></button>
+
+      <% if(typeof user !== "undefined") { %>
+        <% if(userType === "customer") { %>
+        <span class="text-base md:text-lg bg-base-100"><em>Hello </em><a href="/cart" class="text-cyan-700 underline md:text-lg font-bold bg-base-100 hover:text-cyan-900 hover:border-cyan-900 hover:bg-base-100 mr-6"><%= user.firstname %></a><span>            
+        <% } else { %>
+         <span class="text-base md:text-lg bg-base-100"><em>Hello <a href="/mealkits/list" class="text-cyan-700 underline md:text-lg font-bold bg-base-100 hover:text-cyan-900 hover:border-cyan-900 hover:bg-base-100 mr-6"><%= user.firstname %></a></span>
+        <% } %>
+        <a href="/log-out" class="btn btn-ghost text-base md:text-lg text-white bg-cyan-700 hover:bg-cyan-900 mr-3 md:mr-6" >Log out</a>
+      <% } else { %>
+        <button class="btn w-24 min-h-8 h-10 border-cyan-700 text-cyan-700 bg-base-100 mr-2 hover:text-cyan-900 hover:bg-white hover:border-cyan-900"><a href="/log-in">Login</a></button>
+        <button class="btn w-24 min-h-8 h-10 bg-cyan-700 text-white hover:bg-cyan-900"><a href="/sign-up">Sign Up</a></button>
+      <% } %> 
       </div>
     </ul>
     <label for="my-drawer-4" class="absolute top-0 right-0 p-4 cursor-pointer">

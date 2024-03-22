@@ -3,7 +3,7 @@
         <h1 class="text-center text-2xl text-cyan-700 font-bold ml-6 mr-6 mb-6 mt-20"><%= items.categoryName %></h1>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 xl:ml-60 xl:mr-60 lg:ml-30 lg:mr-30 md:ml-14 md:mr-14 sm:ml-6 sm:mr-6">
             <% items.mealkits.forEach((item) => { %>
-                <%- include('partials/mealkit', {item}) %>
+                <%- include('../partials/mealkit', {item}) %>
             <% }) %>
         </div>
     <% }) %>

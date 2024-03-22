@@ -1,0 +1,316 @@
+const mealkits = require("../modules/mealkit-util");
+const express = require("express");
+const router = express.Router();
+const bycryptjs = require("bcryptjs");
+const mongoose = require("mongoose");
+const userModel = require("../models/userModel");
+
+const allMealkits = mealkits.getAllMealKits();
+const featured = mealkits.getFeaturedMealKits(allMealkits);
+const mealkitsByCategory = mealkits.getMealKitsByCategory(allMealkits);
+
+router.get('/', (req, res) => {
+    res.render("general/home", {featured, title: "home"});
+})
+
+router.get('/pricing', (req, res) => {
+    res.send("This is a page about pricing.");
+})
+router.get('/faq', (req, res) => {
+    res.send("This page includes frequent asked questions.");
+})
+router.get('/gift-cards', (req, res) => {
+    res.send("This page includes gift cards information.");
+})
+router.get('/Sustainability', (req, res) => {
+    res.send("This page demonstrates how we achieve long-term sustainability.");
+})
+router.get('/log-in', (req, res) => {
+    res.render("general/log-in", {
+        title: "Log-in",
+        validationMessages: {},
+        values: {
+            email: "",
+            password: ""
+        }
+    });
+})
+
+router.get("/welcome", (req, res) => {
+    res.render("general/welcome", {
+        title: "Welcome",       
+    });
+})
+// Submit log-in form
+router.post("/log-in", (req, res) => {
+
+    let passedValidation = true;
+
+    console.log(req.body);
+
+    const {email, password, userType} = req.body;
+    let validationMessages = {};
+
+    // Email validation
+    if (typeof email !== "string") {
+        passedValidation = false;
+        validationMessages.email = "The email is required";
+    }
+    else if (email.trim().length === 0){
+        passedValidation = false;
+        validationMessages.email = "Please enter a valid email address";
+    } 
+
+    // Password validation
+    if (typeof password !== "string") {
+        passedValidation = false;
+        validationMessages.password = "You must specify a password.";
+    }
+    else if (password.trim().length === 0){
+        passedValidation = false;
+        validationMessages.password = "Please enter your password";
+    } 
+    if (passedValidation === false) {
+        res.render("general/log-in", {
+            title: "Log-in",
+            validationMessages,
+            values: req.body    
+        });
+    }
+
+    else {
+
+        let errors = [];
+
+        userModel.findOne({
+            email
+        })
+            .then(user => {
+                if(user) {
+                    //found user document
+                    
+                    //Compare the password submitted with the document
+                    bycryptjs.compare(password, user.password)
+                        .then(matched => {
+                            if (matched) {
+                                // Password matched
+                                // Create a new session.
+                                req.session.user = user;
+                                req.session.userType = userType;
+                                console.log("Logged in successfully.");
+
+                                if (userType === "clerk") 
+                                res.redirect("/mealkits/list");
+                                else res.redirect("/cart")
+                            }
+                            else {
+                                //Password didn't match
+                                errors.push("Password doesn't match the database");
+                                    res.render("general/log-in", {
+                                        title: "Log-in",
+                                        errors,
+                                        validationMessages,
+                                        values: req.body
+                                    });                                
+                            }
+                        })
+
+                        .catch(err => {
+                            // Couldn't compare the password
+                            errors.push("Couldn't get the document. " + err);
+                            res.render("general/log-in", {
+                                title: "Log-in",
+                                errors,
+                                validationMessages,
+                                values: req.body
+                            });                        
+                        })
+                }
+                else{
+                    // Couldn't find the user document
+                    errors.push("Couldn't find the user");
+                    console.log(errors[0]);
+                    res.render("general/log-in", {
+                        title: "Log-in",
+                        errors,
+                        validationMessages,
+                        values: req.body
+                    });
+                }
+            })
+            .catch(err => {
+                errors.push("Couldn't get the document." + err);
+                res.render("general/login", {
+                    title: "Log-in",
+                    errors
+                });
+            });
+    }
+
+})
+
+router.get('/sign-up', (req, res) => {
+    res.render("general/sign-up", {
+        title: "Sign-up",
+        validationMessages: {},
+        values: {
+            firstname: "",
+            lastname: "",
+            email: "",
+            password: ""
+        }    
+    });
+})
+
+router.post("/sign-up", (req, res) => {
+
+    console.log(req.body);
+
+    const {firstname, lastname, email, password} = req.body;
+
+    let passedValidation = true;
+    let validationMessages = {};
+
+    // First name validation
+    if (typeof firstname !== "string") {
+        passedValidation = false;
+        validationMessages.firstname = "You must specify a first name.";
+    }
+    else if (firstname.trim().length === 0){
+        passedValidation = false;
+        validationMessages.firstname = "The first name is required";
+    } 
+
+    // Last name validation
+    if (typeof lastname !== "string") {
+        passedValidation = false;
+        validationMessages.lastname = "You must specify a last name.";
+    }
+    else if (lastname.trim().length === 0){
+        passedValidation = false;
+        validationMessages.lastname = "The last name is required";
+    } 
+    // Email validation
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (typeof email !== "string") {
+        passedValidation = false;
+        validationMessages.email = "You must specify an email.";
+    }
+    else if (email.trim().length === 0){
+        passedValidation = false;
+        validationMessages.email = "The email is required";
+    } 
+    else if (emailRegex.test(email) === false) {
+        passedValidation = false;
+        validationMessages.email = "Incorrect email format";
+    } 
+    else {
+        // Email uniqueness validation
+        userModel.findOne({email: email})
+            .then(user => {
+                if(user) {
+                    console.log("Email is already in use.");
+                    passedValidation = false;
+                    validationMessages.email = "This email has been used by another user!";
+                }
+            })
+    }
+
+    // Password validation
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W)[A-Za-z\d\W]{8,12}$/;
+    if (typeof password !== "string") {
+        passedValidation = false;
+        validationMessages.password = "You must specify a password.";
+    }
+    else if (password.trim().length === 0){
+        passedValidation = false;
+        validationMessages.password = "The password is required";
+    } 
+    else if (passwordRegex.test(password) === false) {
+        passedValidation = false;
+        validationMessages.password = "Your password should be between 8 to 12 characters and contains at least one lowercase letter, uppercase letter, number and a symbol";
+    }
+
+    if (passedValidation) {
+        
+        const newUser = new userModel({
+            firstname,
+            lastname,
+            email,
+            password
+        });
+
+        const sgMail = require("@sendgrid/mail");
+        sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
+        
+        const msg = {
+            to: email,
+            from: "appledef@gmail.com",
+            subject: "Welcome to KITCHAVST",
+            html: 
+                `Hi ${firstname} ${lastname},<br><br>
+                 Congratulations and welcome to KITCHAVST!<br><br>
+                 Your account has been successfully created. Here are your account details:<br><br>
+                 User firstname: ${firstname}<br>
+                 User lastname: ${lastname}<br>
+                 Email: ${email}<br><br>
+                 To get started, please visit our website at https://smoggy-red-blazer.cyclic.router and 
+                 log in with your credentials.<br><br>
+                 Than your for choosing KITCHAVST. We look forward to providing you with an exceptional 
+                 experience.<br><br>
+                 Best regards,<br><br>
+                 Rong Gang Xu<br>`
+        }
+        sgMail.send(msg)
+            .then(() => {
+                newUser.save()
+                    .then(() => {
+                        console.log("Saved the user " + firstname);
+                        res.redirect("/welcome");
+                    }) 
+                    .catch(err => {
+                        console.log("Couldn't save the user " + firstname + "\n" + err);
+                        res.render("general/sign-up", {
+                            title: "Sign-up",
+                            validationMessages,
+                            values: req.body     
+                        });
+                    }) 
+            })
+            .catch(err => {
+                console.log(err);
+                res.render("general/sign-up", {
+                    title: "Sign-up",
+                    validationMessages,
+                    values: req.body    
+                });
+            })
+    }
+    else {
+        res.render("general/sign-up", {
+            title: "Sign-up",
+            validationMessages,
+            values: req.body    
+        });
+    }
+})
+// Route to the logout page 
+router.get("/log-out", (req, res) => {
+    
+    // Clear the session from memory
+    req.session.destroy();
+    
+    res.redirect("/log-in");
+})
+
+// Route to shopping cart
+router.get('/cart', (req, res) => {
+    if (req.session.userType === "customer") {
+        res.render("general/cart", {title: "Shopping cart"});
+    }
+    else {
+        res.status(401).render("general/error", {title: 'Unauthorized'});
+    }
+})
+
+module.exports = router;

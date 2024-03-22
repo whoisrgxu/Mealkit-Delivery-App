@@ -1,0 +1,21 @@
+const mealkits = require("../modules/mealkit-util");
+const express = require("express");
+const router = express.Router();
+
+const allMealkits = mealkits.getAllMealKits();
+const mealkitsByCategory = mealkits.getMealKitsByCategory(allMealkits);
+
+router.get('/on-the-menu', (req, res) => {
+    res.render("mealkits/on-the-menu", {mealkitsByCategory, title: "on-the-menu"});
+})
+
+router.get('/list', (req, res) => {
+    if (req.session.userType === "clerk") {
+        res.render("mealkits/list", {title: "Mealkit List"});
+    }
+    else {
+        res.status(401).render("general/error", {title: 'Unauthorized'});
+    }
+})
+
+module.exports = router;
