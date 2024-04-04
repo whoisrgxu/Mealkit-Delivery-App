@@ -1,0 +1,50 @@
+const mealkits = require("../modules/mealkit-util");
+const express = require("express");
+const router = express.Router();
+const mongoose = require("mongoose");
+const mealkitsModel = require("../models/mealkitsModel");
+
+const allMealkits = mealkits.getAllMealKits();
+
+router.get('/mealkits', (req, res) => {
+    // Protect this route, so only "data clerks" are able to access it.
+    if (req.session && req.session.user && req.session.userType === 'clerk') {
+
+        // Clerk is signed in.
+
+        // We can load the data here.
+        mealkitsModel.countDocuments() 
+        .then(count => {
+            if (count === 0) { 
+                mealkitsModel.insertMany(allMealkits)
+                    .then(() => {
+                        res.render("loadData/loaded", {
+                            message: "Added mealkits to the database.",
+                            title: "Load Data"
+                        });
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        res.render("loadData/loaded", {
+                            message: "Couldn't load the document.",
+                            title: "Load Data"
+                        });
+                    });
+            }
+            else {
+                res.render("loadData/loaded", {
+                    message: "Mealkits have already been added to the database.",
+                    title: "Load Data"
+                });
+            }
+        })  
+    }
+    else {
+        // Clerk is not signed in. Can not load data, present an error.
+        res.status(403).render("general/error", {title: 'Unauthorized'});
+    }
+})
+
+
+
+module.exports = router;

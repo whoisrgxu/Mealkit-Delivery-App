@@ -1,21 +1,133 @@
+const path = require("path");
 const mealkits = require("../modules/mealkit-util");
 const express = require("express");
 const router = express.Router();
+const mealkitsModel = require("../models/mealkitsModel");
 
-const allMealkits = mealkits.getAllMealKits();
-const mealkitsByCategory = mealkits.getMealKitsByCategory(allMealkits);
 
 router.get('/on-the-menu', (req, res) => {
-    res.render("mealkits/on-the-menu", {mealkitsByCategory, title: "on-the-menu"});
+
+    const showButton = false;
+    mealkitsModel.find()
+        .then(allMealkits => {
+            // To get the Mealkits by categary list
+            let categories = [];
+            let mealkitsByCategory = [];
+
+            for (let i = 0; i < allMealkits.length; i++) {
+
+                if (categories.includes(allMealkits[i].category) === false) {
+
+                    categories.push(allMealkits[i].category);
+                }
+            }
+            categories.forEach((category) => {
+                mealkitsByCategory.push({categoryName: category, mealkits: []});
+            })
+            for (let i = 0; i < allMealkits.length; i++) {
+
+                for (let j = 0; j < categories.length; j++) {
+
+                    if (allMealkits[i].category === categories[j]) {
+
+                        mealkitsByCategory[j].mealkits.push(allMealkits[i]);
+                        break;
+                    }
+                }
+            }
+
+            // render the on-the-menu view
+            res.render("mealkits/on-the-menu", {
+                title: "on-the-menu",
+                showButton,
+                mealkitsByCategory
+            });
+        })
+        .catch(() => {
+            console.log(err);
+            res.redirect("/");
+        })      
 })
 
 router.get('/list', (req, res) => {
+    const showButton = true;
     if (req.session.userType === "clerk") {
-        res.render("mealkits/list", {title: "Mealkit List"});
+
+        mealkitsModel.find().sort({title: 1})
+            .then(allMealkits => {
+
+                res.render("mealkits/list", {
+                    title: "Mealkit List",
+                    showButton,
+                    allMealkits
+                });
+            })
+            .catch(() => {
+                console.log(err);
+                res.redirect("/");
+            })  
     }
     else {
         res.status(401).render("general/error", {title: 'Unauthorized'});
     }
 })
 
+router.get("/add", (req, res) =>{
+
+    res.render("mealkits/addMealkit", {
+        title: "Add Mealkit",
+    });
+})
+
+router.post("/add", (req, res) =>{
+
+    const {title, includes, description, category, price, cookingTime, servings} = req.body;
+    
+    let featuredMealKit = false;
+    
+    if (req.body.featuredMealKit) {
+        
+        featuredMealKit = true;
+    }
+    let imageUrl = "Empty";
+    const newMealkit = new mealkitsModel({ title, includes, description, category, price, cookingTime, servings, imageUrl, featuredMealKit});
+
+    newMealkit.save()
+        .then(mealkitSaved => {
+            console.log(`Mealkit ${mealkitSaved.title} has been added to the database.`);
+
+            // Create a unique name for the picture, so that it can be stored in the static folder.
+            imageUrl = req.files.imageUrl;
+            const uniqueName = `mealkit-pic-${mealkitSaved._id}${path.parse(imageUrl.name).ext}`;
+
+            // Copy the image data to a file on the system.
+            imageUrl.mv(`assets/mealkit-Pics/${uniqueName}`)
+                .then(() => {
+                    // Successful
+                    // Update the document so the mealkit pic is populated.
+                    mealkitsModel.updateOne({
+                        _id: mealkitSaved._id
+                    }, {
+                        imageUrl: uniqueName
+                    })
+                        .then(() => {
+                            // Successfully updated document
+                            console.log("Updated the mealkit pic");
+                            res.redirect("/mealkits/add");
+                        })
+                        .catch(err => {
+                            console.group("Error updating document... " + err);
+                            res.redirect("/mealkits/add");
+                        })
+                })
+                .catch(err => {
+                    console.group("Error updating the mealkit pic... " + err);
+                    res.redirect("/mealkits/add");
+                })
+        })
+        .catch(err => {
+            console.log(`Error adding mealkit to the database ... ${err}`);
+            res.render("mealkits/addMealkit", {title: "Add Mealkit"});
+        })
+})
 module.exports = router;

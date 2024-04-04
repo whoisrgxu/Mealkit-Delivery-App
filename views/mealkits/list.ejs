@@ -1,7 +1,12 @@
-<div class="hero xl:min-h-screen bg-[url(/images/hero-3.svg)]">
-    <div class="hero-content text-center">
-        <div class="max-w-md">
-        <p class="font-bold">Hello Data Entry Clerk!</p><br>
-        </div>
+
+<div class="p-3 md:p-0">
+    <div class="mt-20 flex justify-center">
+        <a href="/mealkits/add"><button class="btn btn-outline btn-success">Add Mealkits</button></a>
     </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10 xl:ml-60 xl:mr-60 lg:ml-30 lg:mr-30 md:ml-14 md:mr-14 sm:ml-6 sm:mr-6">
+        <% allMealkits.forEach((item) => { %>
+            <%- include('../partials/mealkit', {item}) %>
+        <% }) %>
+    </div>
+
 </div>

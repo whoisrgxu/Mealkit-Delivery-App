@@ -6,5 +6,11 @@
     <div class="card-actions justify-end mt-2">
       <a class="btn btn-primary w-32 min-h-8 h-8" href="/">$<%= item.price %></a>
     </div>
+    <% if (userType === "clerk" && showButton === true) { %>
+    <div>
+      <a href="mealkits/edit/:<%= item._id%>" class="mr-2"><button class="btn w-min:75 btn-outline btn-success">Edit</button></a>
+      <a href="mealkits/remove/:<%= item._id%>"><button class="btn btn-outline btn-success">Delete</button></a>
+    </div>
+    <% } %>
   </div>
 </div> 

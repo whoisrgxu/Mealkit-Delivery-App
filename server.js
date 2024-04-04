@@ -14,7 +14,7 @@ const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
 const mongoose = require("mongoose");
 const session = require("express-session");
-
+const fileUpload =require("express-fileupload");
 // Set up dotenv
 const dotenv = require("dotenv");
 dotenv.config({path: "./config/keys.env"});
@@ -42,12 +42,18 @@ app.use((req, res, next) => {
 })
 // Set up body-parser
 app.use(express.urlencoded({extended: false}));
+
+// Set up express-fileupload
+app.use(fileUpload());
+
 // Load controllers into express
 const generalController = require("./controllers/generalController");
-const mealkitsController = require("./controllers/mealkitsController")
+const mealkitsController = require("./controllers/mealkitsController");
+const loadDataController = require("./controllers/loadDataController")
 
 app.use("/", generalController);
 app.use("/mealkits", mealkitsController);
+app.use("/load-data", loadDataController);
 
 app.use(express.static(path.join(__dirname, "/assets")));
 

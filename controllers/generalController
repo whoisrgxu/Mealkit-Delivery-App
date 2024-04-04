@@ -2,15 +2,30 @@ const mealkits = require("../modules/mealkit-util");
 const express = require("express");
 const router = express.Router();
 const bycryptjs = require("bcryptjs");
-const mongoose = require("mongoose");
 const userModel = require("../models/userModel");
+const mealkitsModel = require("../models/mealkitsModel");
 
 const allMealkits = mealkits.getAllMealKits();
 const featured = mealkits.getFeaturedMealKits(allMealkits);
 const mealkitsByCategory = mealkits.getMealKitsByCategory(allMealkits);
 
 router.get('/', (req, res) => {
-    res.render("general/home", {featured, title: "home"});
+    const showButton = false;
+     mealkitsModel.find()
+        .then(mealkits => {
+            const featured = [];
+            mealkits.forEach((mealkit) => {
+
+                if (mealkit.featuredMealKit === true) featured.push(mealkit);
+            })
+            res.render("general/home", {featured, showButton, title: "home"});
+
+        })
+        .catch(() => {
+            console.log(err);
+            res.redirect("/");
+        })  
+
 })
 
 router.get('/pricing', (req, res) => {
