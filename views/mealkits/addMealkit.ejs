@@ -2,29 +2,32 @@
   <div class="text-center text-cyan-700 font-bold text-xl" >Add Mealkits</div>
   <div class="text-center text-cyan-700 text-sm font-bold">Enter the following information for the new mealkit:</div>
   <div class="form-control">
-    <input type="text" name="title" id="title" class="input input-bordered border-cyan-700 border rounded-none mt-3" placeholder="Title">
+    <input type="text" name="title" id="title" required class="input input-bordered border-cyan-700 border rounded-none mt-3" placeholder="Title">
   </div>
   <div class="form-control">
-    <input type="text" name="includes" id="includes" class="input input-bordered border-cyan-700 border rounded-none mt-3" placeholder="Includes">
+    <input type="text" name="includes" required id="includes" class="input input-bordered border-cyan-700 border rounded-none mt-3" placeholder="Includes">
   </div>
   <div class="form-control">
-    <input type="text" name="description" id="description" class="input input-bordered border-cyan-700 border rounded-none mt-3" placeholder="Description">
+    <textarea class="textarea textarea-bordered border-cyan-700 border rounded-none mt-3" name="description" required id="description" placeholder="Description"></textarea>
   </div>
   <div class="form-control">
-    <input type="text" name="category" id="category" class="input input-bordered border-cyan-700 border rounded-none mt-3" placeholder="Category">
+    <input type="text" name="category" required id="category" class="input input-bordered border-cyan-700 border rounded-none mt-3" placeholder="Category">
   </div>
   <div class="form-control">
-    <input type="number" step="0.01" name="price" id="price" class="input input-bordered border-cyan-700 border rounded-none mt-3" placeholder="Price">
+    <input type="number" step="0.01" required name="price" id="price" class="input input-bordered border-cyan-700 border rounded-none mt-3" placeholder="Price">
   </div> 
   <div class="form-control">
-    <input type="number" name="cookingTime" id="cookingTime" class="input input-bordered border-cyan-700 border rounded-none mt-3" placeholder="Cooking Time">
+    <input type="number" name="cookingTime" required id="cookingTime" class="input input-bordered border-cyan-700 border rounded-none mt-3" placeholder="Cooking Time">
   </div> 
   <div class="form-control">
-    <input type="number" name="servings" id="servings" class="input input-bordered border-cyan-700 border rounded-none mt-3" placeholder="Servings">
+    <input type="number" name="servings" required id="servings" class="input input-bordered border-cyan-700 border rounded-none mt-3" placeholder="Servings">
   </div>  
   <div class="form-control mt-5">
-    <input type="file" name="imageUrl" id="imageUrl" class="file-input file-input-bordered file-input-primary w-full max-w-xs" />
+    <input type="file" name="imageUrl" required id="imageUrl" class="file-input file-input-bordered file-input-primary w-full max-w-xs" />
   </div> 
+<% if (fileTypeWarning.length !== 0) { %>
+        <span style="color: red"><%= fileTypeWarning %></span> 
+<% } %>
   <div class="form-control">
     <label class="label cursor-pointer">
         <span class="label-text text-cyan-700 lg:text-lg">Featured mealkit</span> 

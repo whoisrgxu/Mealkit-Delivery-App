@@ -1,5 +1,5 @@
 <div class="card bg-base-100 shadow-xl rounded-none">
-  <figure><img src="<%= item.imageUrl%>" alt="mealkit"/></figure>
+  <figure><img src="/mealkit-pics/<%= item.imageUrl%>" alt="mealkit"/></figure>
   <div class="card-body">
     <h2 class="card-title"><%= item.title %></h2>
     <p>with <%= item.includes %></p>
@@ -8,8 +8,8 @@
     </div>
     <% if (userType === "clerk" && showButton === true) { %>
     <div>
-      <a href="mealkits/edit/:<%= item._id%>" class="mr-2"><button class="btn w-min:75 btn-outline btn-success">Edit</button></a>
-      <a href="mealkits/remove/:<%= item._id%>"><button class="btn btn-outline btn-success">Delete</button></a>
+      <a href="/mealkits/edit/<%= item._id %>" class="mr-2"><button class="btn w-min:75 btn-outline btn-primary">Edit</button></a>
+      <a href="/mealkits/remove/<%= item._id%>"><button class="btn btn-outline btn-primary">Delete</button></a>
     </div>
     <% } %>
   </div>

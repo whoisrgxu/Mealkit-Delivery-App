@@ -7,7 +7,7 @@ const mealkits = [
      price: 19.99,
      cookingTime: 45,
      servings: 2,
-     imageUrl: "/images/meal-kit-1.jpg",
+     imageUrl: "meal-kit-1.jpg",
      featuredMealKit: true
     },
     {
@@ -18,7 +18,7 @@ const mealkits = [
      price: 19.99,
      cookingTime: 45,
      servings: 4,
-     imageUrl: "/images/meal-kit-7.webp",
+     imageUrl: "meal-kit-7.webp",
      featuredMealKit: false
      },
     {
@@ -29,7 +29,7 @@ const mealkits = [
      price: 19.99,
      cookingTime: 40,
      servings: 3,
-     imageUrl: "/images/meal-kit-3.jpg",
+     imageUrl: "meal-kit-3.jpg",
      featuredMealKit: true
      },
     {
@@ -40,7 +40,7 @@ const mealkits = [
      price: 19.99,
      cookingTime: 30,
      servings: 2,
-     imageUrl: "/images/meal-kit-4.webp",
+     imageUrl: "meal-kit-4.webp",
      featuredMealKit: false 
      },
     {
@@ -51,7 +51,7 @@ const mealkits = [
      price: 19.99,
      cookingTime: 50,
      servings: 6,
-     imageUrl: "/images/meal-kit-5.webp",
+     imageUrl: "meal-kit-5.webp",
      featuredMealKit: true
      },
     {
@@ -62,7 +62,7 @@ const mealkits = [
      price: 19.99,
      cookingTime: 60,
      servings: 6,
-     imageUrl: "/images/meal-kit-6.webp",
+     imageUrl: "meal-kit-6.webp",
      featuredMealKit: false
      }
 ]

@@ -1358,6 +1358,23 @@ html {
   min-width: 4rem;
 }
 
+.textarea {
+  min-height: 3rem;
+  flex-shrink: 1;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  line-height: 2;
+  border-radius: var(--rounded-btn, 0.5rem);
+  border-width: 1px;
+  border-color: transparent;
+  --tw-bg-opacity: 1;
+  background-color: var(--fallback-b1,oklch(var(--b1)/var(--tw-bg-opacity)));
+}
+
 .btm-nav > * .label {
   font-size: 1rem;
   line-height: 1.5rem;
@@ -1377,10 +1394,6 @@ html {
 
   .btn-primary {
     --btn-color: var(--fallback-p);
-  }
-
-  .btn-success {
-    --btn-color: var(--fallback-su);
   }
 }
 
@@ -1437,16 +1450,6 @@ html {
   .btn-primary {
     --btn-color: var(--p);
   }
-
-  .btn-success {
-    --btn-color: var(--su);
-  }
-}
-
-.btn-success {
-  --tw-text-opacity: 1;
-  color: var(--fallback-suc,oklch(var(--suc)/var(--tw-text-opacity)));
-  outline-color: var(--fallback-su,oklch(var(--su)/1));
 }
 
 .btn.glass {
@@ -2188,6 +2191,42 @@ html {
 
 .steps .step[data-content]:after {
   content: attr(data-content);
+}
+
+.textarea-bordered {
+  border-color: var(--fallback-bc,oklch(var(--bc)/0.2));
+}
+
+.textarea:focus {
+  box-shadow: none;
+  border-color: var(--fallback-bc,oklch(var(--bc)/0.2));
+  outline-style: solid;
+  outline-width: 2px;
+  outline-offset: 2px;
+  outline-color: var(--fallback-bc,oklch(var(--bc)/0.2));
+}
+
+.textarea-disabled,
+  .textarea:disabled,
+  .textarea[disabled] {
+  cursor: not-allowed;
+  --tw-border-opacity: 1;
+  border-color: var(--fallback-b2,oklch(var(--b2)/var(--tw-border-opacity)));
+  --tw-bg-opacity: 1;
+  background-color: var(--fallback-b2,oklch(var(--b2)/var(--tw-bg-opacity)));
+  --tw-text-opacity: 0.2;
+}
+
+.textarea-disabled::-moz-placeholder, .textarea:disabled::-moz-placeholder, .textarea[disabled]::-moz-placeholder {
+  color: var(--fallback-bc,oklch(var(--bc)/var(--tw-placeholder-opacity)));
+  --tw-placeholder-opacity: 0.2;
+}
+
+.textarea-disabled::placeholder,
+  .textarea:disabled::placeholder,
+  .textarea[disabled]::placeholder {
+  color: var(--fallback-bc,oklch(var(--bc)/var(--tw-placeholder-opacity)));
+  --tw-placeholder-opacity: 0.2;
 }
 
 @keyframes toast-pop {
