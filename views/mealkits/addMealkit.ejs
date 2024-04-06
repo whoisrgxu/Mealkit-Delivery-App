@@ -2,25 +2,25 @@
   <div class="text-center text-cyan-700 font-bold text-xl" >Add Mealkits</div>
   <div class="text-center text-cyan-700 text-sm font-bold">Enter the following information for the new mealkit:</div>
   <div class="form-control">
-    <input type="text" name="title" id="title" required class="input input-bordered border-cyan-700 border rounded-none mt-3" placeholder="Title">
+    <input type="text" name="title" id="title" value="<%= mealkit.title %>" required class="input input-bordered border-cyan-700 border rounded-none mt-3" placeholder="Title">
   </div>
   <div class="form-control">
-    <input type="text" name="includes" required id="includes" class="input input-bordered border-cyan-700 border rounded-none mt-3" placeholder="Includes">
+    <input type="text" name="includes" required id="includes" value="<%= mealkit.includes %>" class="input input-bordered border-cyan-700 border rounded-none mt-3" placeholder="Includes">
   </div>
   <div class="form-control">
-    <textarea class="textarea textarea-bordered border-cyan-700 border rounded-none mt-3" name="description" required id="description" placeholder="Description"></textarea>
+    <textarea class="textarea textarea-bordered border-cyan-700 border rounded-none mt-3" name="description" required id="description" placeholder="Description"><%= mealkit.title %></textarea>
   </div>
   <div class="form-control">
-    <input type="text" name="category" required id="category" class="input input-bordered border-cyan-700 border rounded-none mt-3" placeholder="Category">
+    <input type="text" name="category" required id="category" value="<%= mealkit.category %>" class="input input-bordered border-cyan-700 border rounded-none mt-3" placeholder="Category">
   </div>
   <div class="form-control">
-    <input type="number" step="0.01" required name="price" id="price" class="input input-bordered border-cyan-700 border rounded-none mt-3" placeholder="Price">
+    <input type="number" step="0.01" required name="price" id="price" value="<%= mealkit.price %>" class="input input-bordered border-cyan-700 border rounded-none mt-3" placeholder="Price">
   </div> 
   <div class="form-control">
-    <input type="number" name="cookingTime" required id="cookingTime" class="input input-bordered border-cyan-700 border rounded-none mt-3" placeholder="Cooking Time">
+    <input type="number" name="cookingTime" required id="cookingTime" value="<%= mealkit.cookingTime %>" class="input input-bordered border-cyan-700 border rounded-none mt-3" placeholder="Cooking Time">
   </div> 
   <div class="form-control">
-    <input type="number" name="servings" required id="servings" class="input input-bordered border-cyan-700 border rounded-none mt-3" placeholder="Servings">
+    <input type="number" name="servings" required id="servings" value="<%= mealkit.servings %>" class="input input-bordered border-cyan-700 border rounded-none mt-3" placeholder="Servings">
   </div>  
   <div class="form-control mt-5">
     <input type="file" name="imageUrl" required id="imageUrl" class="file-input file-input-bordered file-input-primary w-full max-w-xs" />
@@ -31,7 +31,11 @@
   <div class="form-control">
     <label class="label cursor-pointer">
         <span class="label-text text-cyan-700 lg:text-lg">Featured mealkit</span> 
-        <input type="checkbox" name="featuredMealKit" id="featuredMealKit" value="Yes" class="checkbox checkbox-primary" />
+        <% if (mealkit.featuredMealKit) {%>
+          <input type="checkbox" name="featuredMealKit" id="featuredMealKit" value="Yes"  checked class="checkbox checkbox-primary" />
+       <% } else {%>
+          <input type="checkbox" name="featuredMealKit" id="featuredMealKit" class="checkbox checkbox-primary" />
+       <% } %>
     </label>
   </div>
   <div class="form-control mt-4">

@@ -1,5 +1,4 @@
 const path = require("path");
-const mealkits = require("../modules/mealkit-util");
 const express = require("express");
 const router = express.Router();
 const fs = require('fs');
@@ -78,6 +77,7 @@ router.get("/add", (req, res) =>{
     res.render("mealkits/addMealkit", {
         title: "Add Mealkit",
         fileTypeWarning: "",
+        mealkit: {}
     });
 })
 
@@ -96,14 +96,12 @@ router.post("/add", (req, res) =>{
 
     newMealkit.save()
         .then(mealkitSaved => {
-            console.log(`Mealkit ${mealkitSaved.title} has been added to the database.`);
             // Create a unique name for the picture, so that it can be stored in the static folder.
             const imageUrlFile = req.files.imageUrl;
             const uniqueName = `mealkit-pic-${mealkitSaved._id}${path.parse(imageUrlFile.name).ext}`;
             const allowedExtensions = ['jpg', 'jpeg', 'gif', 'png'];
 
             if (allowedExtensions.includes(path.parse(imageUrlFile.name).ext.substring(1).toLowerCase())){
-
 
                 // Copy the image data to a file on the system.
                 imageUrlFile.mv(`assets/mealkit-pics/${uniqueName}`)
@@ -138,7 +136,8 @@ router.post("/add", (req, res) =>{
                 .then(() => {
                     res.render("mealkits/addMealkit", {
                         title: "Add Mealkit",
-                        fileTypeWarning
+                        fileTypeWarning,
+                        mealkit: mealkitSaved
                     })
                 })
                 .catch(err => console.log(err));
@@ -175,6 +174,8 @@ router.get("/edit/:id", (req, res) => {
 router.post("/edit/:id", (req, res) => {
 
     const id = req.params.id;
+
+    const fileTypeWarning = "";
     
     const {title, includes, description, category, price, cookingTime, servings} = req.body;
     
@@ -190,58 +191,53 @@ router.post("/edit/:id", (req, res) => {
     }
     // Find the existing document's imageUrl
     let existingUrl;
+    
     mealkitsModel.findOne({_id: id})
         .then(item => {
             existingUrl = item.imageUrl;
-        })
-        .catch(err => console.log(err));
-    
-    const allowedExtensions = ['jpg', 'jpeg', 'gif', 'png'];
+            const allowedExtensions = ['jpg', 'jpeg', 'gif', 'png'];
+            if (allowedExtensions.includes(path.parse(imageUrlFile.name).ext.substring(1).toLowerCase())){
 
-    if (allowedExtensions.includes(path.parse(imageUrlFile.name).ext.substring(1).toLowerCase())){
-        
-        mealkitsModel.updateOne({_id: id}, {
-            $set: {title, includes, description, category, price, cookingTime, servings, featuredMealKit}
-        })
-        .then(() => {
-            // make a unique name for the changed imgUrl
-            const uniqueName = `mealkit-pic-${id}${path.parse(imageUrlFile.name).ext}`;
-            if (uniqueName !== existingUrl) {
-                // Copy the image data to a file on the system.
-                imageUrlFile.mv(`assets/mealkit-pics/${uniqueName}`)
-                    .then(() => {
-                    mealkitsModel.updateOne({
-                        _id: id
-                    }, {
-                        imageUrl: uniqueName
-                    })
+                mealkitsModel.updateOne({_id: id}, {
+                    $set: {title, includes, description, category, price, cookingTime, servings, featuredMealKit}
+                })
+                .then(() => {
+                
+                    // Copy the image data to a file on the system.
+                    imageUrlFile.mv(`assets/mealkit-pics/${existingUrl}`)
                         .then(() => {
-                            // Successfully updated document
-                            console.log("Updated the mealkit pic");
-                            res.redirect("/mealkits/list");
+                            console.log("Successfully move the updated pic.");
+                            res.redirect("/mealkits/list"),{
+                                title: "Edit Mealkit",
+                                fileTypeWarning,
+                                mealkit: req.body
+                            }
+
                         })
                         .catch(err => {
-                            console.group("Error updating document... " + err);
-                            res.redirect("/mealkits/edit");
-                        }) 
-                    })
-                    .catch(err => {
-                        console.log("Couldn't move the pic..." + err);
-                        res.redirect("/mealkits/edit");      
-                    });         
+                            console.log("Couldn't move the pic..." + err);
+                            res.redirect("/mealkits/edit");      
+                        });         
+                })
+            }
+            else {
+                fileTypeWarning = "the selected file type is not allowed!"
+        
+                res.render("mealkits/editMealkit", {
+                    title: "Edit Mealkit",
+                    fileTypeWarning,
+                    mealkit: req.body
+                })     
             }
         })
-    }
-    else {
-        const fileTypeWarning = "the selected file type is not allowed!"
-
-        res.render("mealkits/editMealkit", {
-            title: "Edit Mealkit",
-            fileTypeWarning,
-            mealkit: req.body
-        })     
-    }
-    
+        .catch(err => {         
+            console.log(err);
+            res.render("mealkits/editMealkit"),{
+                title: "Edit Mealkit",
+                fileTypeWarning,
+                mealkit: req.body
+            }
+        });
 })
 
 router.get("/remove/:id", (req, res) => {

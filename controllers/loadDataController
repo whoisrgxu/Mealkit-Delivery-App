@@ -9,7 +9,7 @@ const allMealkits = mealkits.getAllMealKits();
 router.get('/mealkits', (req, res) => {
     // Protect this route, so only "data clerks" are able to access it.
     if (req.session && req.session.user && req.session.userType === 'clerk') {
-
+        console.log("here");
         // Clerk is signed in.
 
         // We can load the data here.

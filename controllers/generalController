@@ -1,13 +1,9 @@
-const mealkits = require("../modules/mealkit-util");
 const express = require("express");
 const router = express.Router();
 const bycryptjs = require("bcryptjs");
 const userModel = require("../models/userModel");
 const mealkitsModel = require("../models/mealkitsModel");
 
-const allMealkits = mealkits.getAllMealKits();
-const featured = mealkits.getFeaturedMealKits(allMealkits);
-const mealkitsByCategory = mealkits.getMealKitsByCategory(allMealkits);
 
 router.get('/', (req, res) => {
     const showButton = false;
