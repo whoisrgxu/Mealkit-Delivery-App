@@ -316,12 +316,239 @@ router.get("/log-out", (req, res) => {
 
 // Route to shopping cart
 router.get('/cart', (req, res) => {
-    if (req.session.userType === "customer") {
-        res.render("general/cart", {title: "Shopping cart"});
+    if (req.session.user && req.session.userType === "customer") {
+        message = "";
+        prepareView(req, res, message);
     }
     else {
         res.status(401).render("general/error", {title: 'Unauthorized'});
     }
+})
+
+const prepareView = function (req, res, message) {
+    let viewModel = {
+        message,
+        hasMealkits: false,
+        cartTotal: 0,
+        mealkits: [],
+        title: "Shopping cart"
+    };
+
+    if (req.session && req.session.user && req.session.userType === "customer") {
+        // The user is signed in (and a session is established).
+
+        // Get the shopping cart from the session.
+        let cart = req.session.cart || [];
+        console.log(cart);
+        // Check if the cart has mealkits.
+        viewModel.hasMealkits = cart.length > 0;
+
+        // If there are mealkits in the cart, then calculate the order total
+        let cartTotal = 0;
+
+        cart.forEach(cartMealkit => {
+            cartTotal += cartMealkit.mealkit.price * cartMealkit.qty;
+        });
+
+        viewModel.cartTotal = cartTotal;
+        viewModel.mealkits = cart;
+    }
+
+    res.render("general/cart", viewModel);
+};
+// Route to add a new mealkit to the cart.
+// The ID of the mealkit will be specified as part of the URL.
+router.get("/add-mealkit/:id", (req, res) => {
+    
+    let message;
+
+    // Parse the ID of the mealkit.
+    const mealkitId = req.params.id;
+
+    // Check if the user is signed in.
+    if (req.session.user && req.session.userType === "customer") {
+        // The user is signed in.
+
+        // Make sure the shopping cart exists and if not
+        // add a new empty array to the session.
+        let cart = req.session.cart = req.session.cart || [];
+
+        // A shopping cart object will look like this:
+        //    id: The ID of the mealkit (number)
+        //    qty: The number of mealkit to purchase (number)
+        //    mealkit: The details about the mealkit (for displaying in the cart)
+        mealkitsModel.findOne({
+            _id: mealkitId
+        })
+            .then(mealkit => {
+                console.log(mealkit);
+                if (!mealkit) {
+                    message = "The mealkit was not found in the database.";
+                    prepareView(req, res, message);
+                    return;
+                }
+                let found = false;
+                cart.forEach(cartMealkit => {
+                    if (cartMealkit.id === mealkitId) {
+                        // Mealkit is already in the shopping cart.
+                        found = true;
+                        cartMealkit.qty++;
+                    }
+                });
+                if (found) {
+                    // Mealkit was found in the cart, we already incremented qty.
+                    message = `The mealkit "${mealkit.title}" was already in the cart, added one to quantity.`;
+                }
+                else {
+                    // Create a new cart object and add it to the shopping cart.
+                    cart.push({
+                        id: mealkitId,
+                        qty: 1,
+                        mealkit
+                    });
+                    console.log(cart[0]);
+                    // Add logic to sort the cart (by mealkit title).
+                    cart.sort((a, b) => a.mealkit.title.localeCompare(b.mealkit.title));
+    
+                    message = `The mealkit "${mealkit.title}" was added to the cart.`;
+
+                }
+                prepareView(req, res, message);
+            })
+            .catch(() => {
+                // Mealkit not found in the database.
+                message = "The mealkit was not found in the database.";
+                prepareView(req, res, message);
+            })
+    }
+    else {
+        // The user is not signed in.
+        message = "You must be logged in.";
+        prepareView(req, res, message);
+    }
+  
+});
+
+router.post("/update-quantity/:id", (req, res) => {
+
+    const id = req.params.id;
+    const qty = req.body.qty;
+    if (!req.session.cart) {
+        req.session.cart = [];
+    }
+    req.session.cart.forEach(cartMealkit => {
+        if (cartMealkit.id === id) {
+            // Mealkit is found in the shopping cart.
+            cartMealkit.qty = qty;
+        }
+    })
+    message = "";
+    prepareView(req, res, message);
+})
+
+router.get("/remove-mealkit/:id", (req, res) => {
+
+    const id = req.params.id;
+
+    if (!req.session.cart) {
+        req.session.cart = [];
+    }
+    for (let i = 0; i < req.session.cart.length; i++) {
+
+        if (req.session.cart[i].id === id) {
+
+            req.session.cart.splice(i, 1);
+        }
+    }
+    message = "";
+    prepareView(req, res, message);
+})
+
+const generateOrderDetails = function(cart) {
+    
+    let orderItemsHtml = "";
+
+    cart.forEach(m => {
+
+        let subtotal = m.qty * m.mealkit.price;
+        let tax = subtotal * 0.1;
+        let grandTotal = subtotal + tax;
+        orderItemsHtml += `
+            <tr>
+                <td>${m.mealkit.title}</td>
+                <td>${m.mealkit.includes}</td>
+                <td>${m.mealkit.price}</td>
+                <td>${m.qty}</td>
+                <td>${subtotal.toFixed(2)}</td>
+                <td>${tax.toFixed(2)}</td>
+                <td>${grandTotal.toFixed(2)}</td>
+            </tr>
+        `
+    });
+    return `
+        <div>
+            <h1>Thank you for your order!</h1>
+            <p>Here are the details of your order:</p>
+            <table border="1" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Includes</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Subtotal</th>
+                        <th>Tax</th>
+                        <th>Grandtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${orderItemsHtml}
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+router.get("/check-out", (req, res) => {
+
+    //send email
+    if (req.session.user && req.session.userType === "customer"){
+
+        if (req.session.cart && req.session.cart.length > 0) {
+
+            const sgMail = require("@sendgrid/mail");
+            sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
+            
+            const msg = {
+                to: req.session.user.email,
+                from: "appledef@gmail.com",
+                subject: "Your order has been confiremed",
+                html: 
+                    generateOrderDetails(req.session.cart)
+            };
+            sgMail.send(msg)
+                .then(() => {
+                    console.log("Order email sent");
+                    req.session.cart = [];
+                    let message = "Your order has been confirmed.";
+                    prepareView(req, res, message);
+                })
+                .catch(err => {
+                    console.error(err);
+                    let message = "Fail to send order confirmation emal.";
+                    prepareView(req, res, message);
+                });
+            
+        }
+        else {
+            message = "Your shopping cart is empty.";
+            prepareView(req, res, message);
+        }
+    }
+    else {
+        message = "You must be logged in.";
+        prepareView(req, res, message);
+    }
+
 })
 
 module.exports = router;

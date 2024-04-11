@@ -12,5 +12,10 @@
       <a href="/mealkits/remove/<%= item._id%>"><button class="btn btn-outline btn-primary">Delete</button></a>
     </div>
     <% } %>
+    <% if (userType === "customer") { %>
+      <div>
+        <a href='/add-mealkit/<%= item._id %>' class="mr-2"><button class="btn w-min:75 btn-outline btn-primary">Buy</button></a>
+      </div>
+      <% } %>
   </div>
 </div> 

@@ -74,11 +74,16 @@ router.get('/list', (req, res) => {
 
 router.get("/add", (req, res) =>{
 
-    res.render("mealkits/addMealkit", {
-        title: "Add Mealkit",
-        fileTypeWarning: "",
-        mealkit: {}
-    });
+    if(req.session.userType === "clerk") {
+        res.render("mealkits/addMealkit", {
+            title: "Add Mealkit",
+            fileTypeWarning: "",
+            mealkit: {}
+        });
+    }
+    else {
+        res.status(401).render("general/error", {title: 'Unauthorized'});
+    }
 })
 
 router.post("/add", (req, res) =>{
@@ -167,7 +172,7 @@ router.get("/edit/:id", (req, res) => {
                 res.redirect("/mealkits/list");
             })
     }
-    else res.status(401).render("general/error");
+    else res.status(401).render("general/error", {title: 'Unauthorized'});
 })
 
 
@@ -258,7 +263,7 @@ router.get("/remove/:id", (req, res) => {
                 res.redirect("/mealkits/list");
             })
     }
-    else res.status(401).render("general/error");
+    else res.status(401).render("general/error", {title: 'Unauthorized'});
 })
 
 router.post("/remove/:id", (req, res) => {

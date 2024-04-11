@@ -1,7 +1,80 @@
-<div class="hero min-h-72 xl:min-h-screen bg-[url(/images/hero-3.svg)]">
-    <div class="hero-content text-center">
-        <div class="max-w-md">
-        <p class="font-bold">Welcome back <%= user.firstname %>! This is your shopping cart.</p><br>
-        </div>
-    </div>
+<div class="flex justify-center mt-5 mb-5">
+    <span style="color: red" ><%= message %></span> 
 </div>
+<% if(!hasMealkits) { %>
+    <h1 class="text-center">Your shopping cart is empty.</h1>
+<% } %>
+<div class="overflow-x-auto">
+    <% if (typeof hasMealkits === "boolean" && hasMealkits) { %>
+    
+        <table class="table">
+            <!-- head -->
+            <thead>
+            <tr>
+                <th></th>
+                <th>Image</th>
+                <th>Title</th>
+                <th>Includes</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total amount</th>
+            </tr>
+            </thead>
+        <% if (typeof mealkits === "object" && mealkits.constructor === Array ) { %>
+                <!-- row 1 -->
+                <!-- For loop to input table content -->
+            <tbody>
+            <% mealkits.forEach((m, index) => { %>
+                <tr>
+                    <th><%= index+1 %></th>
+                    <td>
+                        <div class="avatar">
+                        <div class="w-28 rounded">
+                            <img src="/mealkit-pics/<%= m.mealkit.imageUrl %>" alt="Mealkit picture">
+                        </div>
+                    </div>
+                    </td>
+                    <td><%= m.mealkit.title %></td>
+                    <td><%= m.mealkit.includes %></td>
+                    <td><%= m.mealkit.price %></td>
+                    <td>
+                        <form action="/update-quantity/<%= m.id %>" method="post">
+                            <input type="number" name="qty" value="<%= m.qty %>" min="0" onchange="this.form.submit()">
+                        </form>
+                    </td>
+                    <td><%= (m.qty * m.mealkit.price).toFixed(2) %></td>
+                    <td><a href='/remove-mealkit/<%= m.id %>' class="mr-2"><button class="btn w-min:75 btn-outline btn-primary">Remove</button></a></td>
+                </tr>
+            <% }) %>
+        <% } %>
+        </tbody>
+    </table>
+    <% } %>    
+
+    <% if (hasMealkits) {%>
+        <div class="flex justify-center mt-10 ml-10"> 
+            <table class="flex justify-center table w-auto">
+                <tbody>
+                <!-- row 1 -->
+                <tr>
+                    <td class="font-bold">Subtotal: </td>
+                    <td class="text-right">$<%= cartTotal.toFixed(2).toLocaleString() %></td>
+                </tr>
+                <!-- row 2 -->
+                <tr>
+                    <td class="font-bold">Tax: </td>
+                    <td class="text-right">$<%= (cartTotal * 0.1).toFixed(2).toLocaleString() %></td>
+                </tr>
+                <!-- row 3 -->
+                <tr>
+                    <td class="font-bold">Grand total: </td>
+                    <td class="text-right">$<%= (cartTotal * 1.1).toFixed(2).toLocaleString() %></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="flex justify-center">
+            <a href='/check-out' class="mt-10"><button class="btn w-min:75 btn-outline btn-primary">Place Order</button></a>
+        </div>
+    <% } %>
+  </div>

@@ -40,6 +40,7 @@ app.use((req, res, next) => {
     res.locals.userType = req.session.userType;
     next();
 })
+
 // Set up body-parser
 app.use(express.urlencoded({extended: false}));
 
