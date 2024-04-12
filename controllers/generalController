@@ -381,7 +381,7 @@ router.get("/add-mealkit/:id", (req, res) => {
             _id: mealkitId
         })
             .then(mealkit => {
-                console.log(mealkit);
+
                 if (!mealkit) {
                     message = "The mealkit was not found in the database.";
                     prepareView(req, res, message);
@@ -406,7 +406,6 @@ router.get("/add-mealkit/:id", (req, res) => {
                         qty: 1,
                         mealkit
                     });
-                    console.log(cart[0]);
                     // Add logic to sort the cart (by mealkit title).
                     cart.sort((a, b) => a.mealkit.title.localeCompare(b.mealkit.title));
     
@@ -467,24 +466,35 @@ router.get("/remove-mealkit/:id", (req, res) => {
 const generateOrderDetails = function(cart) {
     
     let orderItemsHtml = "";
-
+    let subtotal = 0;
     cart.forEach(m => {
 
-        let subtotal = m.qty * m.mealkit.price;
+        subtotal += m.qty * m.mealkit.price;
         let tax = subtotal * 0.1;
         let grandTotal = subtotal + tax;
         orderItemsHtml += `
             <tr>
                 <td>${m.mealkit.title}</td>
                 <td>${m.mealkit.includes}</td>
-                <td>${m.mealkit.price}</td>
+                <td>$${m.mealkit.price}</td>
                 <td>${m.qty}</td>
-                <td>${subtotal.toFixed(2)}</td>
-                <td>${tax.toFixed(2)}</td>
-                <td>${grandTotal.toFixed(2)}</td>
             </tr>
-        `
+        `;
     });
+    orderItemsHtml += `
+        <tr>
+            <td style="border: 0;" align="right" colspan="3">Subtotal</td>
+            <td>$${subtotal.toFixed(2)}</td>
+        </tr> 
+        <tr>
+            <td style="border: 0;" colspan="3" align="right">Tax </td>
+            <td>$${(subtotal * 0.1).toFixed(2)}</td>
+        </tr>
+        <tr>
+            <td style="border: 0;" colspan="3" align="right">Grandtotal </td>
+            <td>$${(subtotal * 1.1).toFixed(2)}</td>
+        </tr>         
+    `
     return `
         <div>
             <h1>Thank you for your order!</h1>
@@ -496,9 +506,6 @@ const generateOrderDetails = function(cart) {
                         <th>Includes</th>
                         <th>Price</th>
                         <th>Quantity</th>
-                        <th>Subtotal</th>
-                        <th>Tax</th>
-                        <th>Grandtotal</th>
                     </tr>
                 </thead>
                 <tbody>

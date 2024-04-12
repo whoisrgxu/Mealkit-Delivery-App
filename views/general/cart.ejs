@@ -1,4 +1,4 @@
-<div class="flex justify-center mt-5 mb-5">
+<div class="flex justify-center pl-5 mt-5 mb-5">
     <span style="color: red" ><%= message %></span> 
 </div>
 <% if(!hasMealkits) { %>
@@ -7,7 +7,7 @@
 <div class="overflow-x-auto">
     <% if (typeof hasMealkits === "boolean" && hasMealkits) { %>
     
-        <table class="table">
+        <table class="table w-full">
             <!-- head -->
             <thead>
             <tr>
@@ -18,6 +18,7 @@
                 <th>Price</th>
                 <th>Quantity</th>
                 <th>Total amount</th>
+                <th></th>
             </tr>
             </thead>
         <% if (typeof mealkits === "object" && mealkits.constructor === Array ) { %>
@@ -29,7 +30,7 @@
                     <th><%= index+1 %></th>
                     <td>
                         <div class="avatar">
-                        <div class="w-28 rounded">
+                        <div class="w-14 lg:w-28 rounded">
                             <img src="/mealkit-pics/<%= m.mealkit.imageUrl %>" alt="Mealkit picture">
                         </div>
                     </div>
@@ -39,11 +40,11 @@
                     <td><%= m.mealkit.price %></td>
                     <td>
                         <form action="/update-quantity/<%= m.id %>" method="post">
-                            <input type="number" name="qty" value="<%= m.qty %>" min="0" onchange="this.form.submit()">
+                            <input type="number" class="w-10 lg:w-20 xl:w-30" name="qty" value="<%= m.qty %>" min="0" onchange="this.form.submit()">
                         </form>
                     </td>
                     <td><%= (m.qty * m.mealkit.price).toFixed(2) %></td>
-                    <td><a href='/remove-mealkit/<%= m.id %>' class="mr-2"><button class="btn w-min:75 btn-outline btn-primary">Remove</button></a></td>
+                    <td><a href='/remove-mealkit/<%= m.id %>' class="mr-2 text-cyan-700"><i class="fa-sharp fa-solid fa-trash"></i></a></td>
                 </tr>
             <% }) %>
         <% } %>

@@ -88,7 +88,7 @@ function onHttpStart() {
 mongoose.connect(process.env.MONGODB_CONNECTION_STRING)
 .then(() => {
     console.log("Connected to the MongoDB database.");
-    app.listen(HTTP_PORT, onHttpStart);
+    app.listen(HTTP_PORT, '0.0.0.0', onHttpStart);
 })
 .catch(err => {
     console.log(`Can't connect to the MongoDB database: ${err}`);
