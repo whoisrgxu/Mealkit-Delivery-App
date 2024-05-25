@@ -51,3 +51,4 @@ Distributed under the MIT License. See LICENSE for more information.
 **Contact**<br>
 Roxu1927@outlook.com
 Project Link: https://github.com/whoisrgxu/Mealkit-Delivery-App
+Deployed as: https://mealkit-delivery-app.onrender.com
