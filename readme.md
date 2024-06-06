@@ -45,9 +45,6 @@ Contributions are what make the open-source community such an amazing place to l
 - Push to the Branch (git push origin feature/AmazingFeature)
 - Open a Pull Request<br>
 
-**License**<br>
-Distributed under the MIT License. See LICENSE for more information.  
-
 **Contact**<br>
 Roxu1927@outlook.com
 Project Link: https://github.com/whoisrgxu/Mealkit-Delivery-App<br> 
